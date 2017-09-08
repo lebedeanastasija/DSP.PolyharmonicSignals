@@ -9,11 +9,11 @@ var svgContainer,
     },
     startPoint = {
         x: margin.left,
-        y: margin.top + height
+        y: Math.round((margin.top + height)/2)
     },
     xAxisLength = 550,
     yAxisLength = 450,
-    scale = 1;
+    scale = 20;
 
 function init() {
     svgContainer = d3.select("body").append("svg")
@@ -25,14 +25,14 @@ function init() {
 
 function drawAxes(xLength, yLength, startPoint, scale) {
     var xScale = d3.scaleLinear().domain([0, xLength]).range([0, xLength]);
-    var yScale = d3.scaleLinear().domain([0, yAxisLength/scale]).range([yLength, 0]);
+    var yScale = d3.scaleLinear().domain([-1 * yAxisLength / scale / 2, yAxisLength / scale / 2]).range([yLength, 0]);
     var xAxis = d3.axisBottom().scale(xScale);
     var yAxis = d3.axisLeft().scale(yScale);
 
     var yAxisGroup = svgContainer
         .append("g")
         .attr('class', 'axis')
-        .attr('transform', 'translate(' + startPoint.x + ',' + margin.top * 3.5 + ')')
+        .attr('transform', 'translate(' + startPoint.x + ',' + margin.top*1.75 + ')')
         .call(yAxis);
 
     var xAxisGroup = svgContainer
