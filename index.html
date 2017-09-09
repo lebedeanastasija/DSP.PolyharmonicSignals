@@ -8,6 +8,26 @@
     <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 <body onload="init()">
-
+    <table class="menu-table">
+        <thead>
+            <tr>
+                <td>Harmonic signal</td>
+                <td>Polyharmonic signal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><button class="menu-btn" onclick="task1()">Variable initial phase</button></td>
+                <td><button class="menu-btn" onclick="task4()">With constant initial phase, amplitude and oscillation</button></td>
+            </tr>
+            <tr>
+                <td><button class="menu-btn" onclick="task2()">Variable oscillation</button></td>
+                <td><button class="menu-btn" onclick="task5()">With linearly increasing initial phase, amplitude and oscillation</button></td>
+            </tr>
+            <tr>
+                <td><button class="menu-btn" onclick="task3()">Variable amplitude</button></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
