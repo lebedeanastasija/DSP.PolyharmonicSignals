@@ -19,20 +19,53 @@ var svgContainer,
     yAxisLength = 450,
     scale = 20,
 
-    A = 10,
+    A1 = 10,
+    A2 = 3,
     N = 512,
-    f = 2,
-    initialPhases = [0, Math.PI / 6, Math.PI / 4, Math.PI / 2, Math.PI];
+    f1 = 2,
+    f2 = 1,
+    initialPhase = Math.PI / 2,
+    initialPhases = [0, Math.PI / 6, Math.PI / 4, Math.PI / 2, Math.PI],
+    f_s = [5,4,2,6,3];
+    A_s = [2, 3, 6, 5, 1];
 
 function init() {
     drawSvgContainer(svgWidth, svgHeight, svgMargin);
     drawAxes(xAxisLength, yAxisLength, startPoint, scale);
-
-    initialPhases.forEach((phase, i) => { drawPoints( harmonicSignal(initialPhases[i])(A, N, f), colors[i] ) });
+    //task 1a
+    //initialPhases.forEach((phase, i) => { drawPoints( variablePhaseHarmonicSignal(phase)(A1, N, f1), colors[i] ) });
+    //tast 1b
+    //f_s.forEach((oscillation, i) => { drawPoints( variableOscillationHarmonicSignal(oscillation)(A2, N, initialPhase), colors[i] ) });
+    //task 1c
+    //A_s.forEach((amplitude, i) => { drawPoints( variableAmplitudeHarmonicSignal(amplitude)(f2, N, initialPhase), colors[i] ) });
 }
 
-function harmonicSignal(initPhase) {
+function 
+
+function variablePhaseHarmonicSignal(initPhase) {
     return (amplitude, period, oscillation) => {
+        var result = [];
+        for(var n = 0; n < period; n++) {
+            var y = amplitude * Math.sin((2 * Math.PI * oscillation * n) / period + initPhase);
+            result.push({y: y, x: n});
+        }
+        return result;
+    }
+}
+
+function variableOscillationHarmonicSignal(oscillation) {
+    return (amplitude, period, initPhase) => {
+        var result = [];
+        for(var n = 0; n < period; n++) {
+            var y = amplitude * Math.sin((2 * Math.PI * oscillation * n) / period + initPhase);
+            result.push({y: y, x: n});
+        }
+        return result;
+    }
+}
+
+function variableAmplitudeHarmonicSignal(amplitude) {
+    return (oscillation, period, initPhase) => {
         var result = [];
         for(var n = 0; n < period; n++) {
             var y = amplitude * Math.sin((2 * Math.PI * oscillation * n) / period + initPhase);
