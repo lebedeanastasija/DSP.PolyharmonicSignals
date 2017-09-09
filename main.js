@@ -3,7 +3,7 @@ var colors = ["red", "brown", "blue", "purple", "yellow", "orange", "gray", "gre
             "gray", "green", "crimson", "lavender", "indigo", "moccasin", "orchid", "plum", "silver", "tan"];
 
 var svgContainer,
-    svgWidth = 600,
+    svgWidth = 800,
     svgHeight = 500,
     svgMargin = {
         top: 20,
@@ -15,7 +15,7 @@ var svgContainer,
         x: svgMargin.left,
         y: Math.round((svgMargin.top + svgHeight)/2)
     },
-    xAxisLength = 550,
+    xAxisLength = 750,
     yAxisLength = 450,
     scale = 20,
 
@@ -30,25 +30,51 @@ var svgContainer,
     f_s_1 = [5,4,2,6,3],
     f_s_2 = [1,2,3,4,5],
     k = 5,
+
     A_s = [2, 3, 6, 5, 1];
 
 function init() {
     drawSvgContainer(svgWidth, svgHeight, svgMargin);
     drawAxes(xAxisLength, yAxisLength, startPoint, scale);
-    // a
+    /* №1 */
     //initialPhases.forEach((phase, i) => { drawPoints( variablePhaseHarmonicSignalVector(phase)(A1, N, f1), colors[i] ) });
-    // b
+
+    /* №2 */
     //f_s_1.forEach((oscillation, i) => { drawPoints( variableOscillationHarmonicSignalVector(oscillation)(A2, N, initialPhase), colors[i] ) });
-    // c
+
+    /* №3 */
     //A_s.forEach((amplitude, i) => { drawPoints( variableAmplitudeHarmonicSignalVector(amplitude)(f2, N, initialPhase), colors[i] ) });
-    // d
-    drawPoints(polyharmonicSignalVector(k, 256)([A3, A3, A3, A3, A3], f_s_2, initialPhases));
+
+    /* №4 */
+    //drawPoints(polyharmonicSignalVector(k, 256)([A3, A3, A3, A3, A3], f_s_2, initialPhases), colors[7]);
+
+    /* №5 */
+    drawPoints( variableParamsPolyharmonicSignalVector(k, 256, 0.2)(A3, f_s_2[0], initialPhases[0]), colors[7]);
+}
+
+function variableParamsPolyharmonicSignalVector(harmonicsNumber, period, increment) {
+    return (amplitude_0, oscillation_0, initPhase_0) => {
+        let result = [];
+        for(var n = 0; n < period*3; n++) {
+
+            let y = 0;
+            let amplitude = (1 + increment * n /period)*amplitude_0;
+            let oscillation = (1 + increment * n /period)*amplitude_0;
+            let initPhase = (1 + increment * n /period)*amplitude_0;
+
+            for (var k = 0; k < harmonicsNumber; k++) {
+                y += harmonicSignal(initPhase, amplitude, period, oscillation, n);
+            }
+            result.push({y: y, x: n})
+        }
+        return result;
+    };
 }
 
 function polyharmonicSignalVector(harmonicsNumber, period) {
     return (amplitudes, oscillations, initPhases) => {
         let result = [];
-        for(var n = 0; n < period*2; n++) {
+        for(var n = 0; n < period*3; n++) {
             let y = 0;
             for (var k = 0; k < harmonicsNumber; k++) {
                 y += harmonicSignal(initPhases[k], amplitudes[k], period, oscillations[k], n);
