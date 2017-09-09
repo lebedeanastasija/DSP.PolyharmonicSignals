@@ -21,28 +21,49 @@ var svgContainer,
 
     A1 = 10,
     A2 = 3,
+    A3 = 1,
     N = 512,
     f1 = 2,
     f2 = 1,
     initialPhase = Math.PI / 2,
     initialPhases = [0, Math.PI / 6, Math.PI / 4, Math.PI / 2, Math.PI],
-    f_s = [5,4,2,6,3];
+    f_s_1 = [5,4,2,6,3],
+    f_s_2 = [1,2,3,4,5],
+    k = 5,
     A_s = [2, 3, 6, 5, 1];
 
 function init() {
     drawSvgContainer(svgWidth, svgHeight, svgMargin);
     drawAxes(xAxisLength, yAxisLength, startPoint, scale);
-    //task 1a
-    //initialPhases.forEach((phase, i) => { drawPoints( variablePhaseHarmonicSignal(phase)(A1, N, f1), colors[i] ) });
-    //tast 1b
-    //f_s.forEach((oscillation, i) => { drawPoints( variableOscillationHarmonicSignal(oscillation)(A2, N, initialPhase), colors[i] ) });
-    //task 1c
-    //A_s.forEach((amplitude, i) => { drawPoints( variableAmplitudeHarmonicSignal(amplitude)(f2, N, initialPhase), colors[i] ) });
+    // a
+    //initialPhases.forEach((phase, i) => { drawPoints( variablePhaseHarmonicSignalVector(phase)(A1, N, f1), colors[i] ) });
+    // b
+    //f_s_1.forEach((oscillation, i) => { drawPoints( variableOscillationHarmonicSignalVector(oscillation)(A2, N, initialPhase), colors[i] ) });
+    // c
+    //A_s.forEach((amplitude, i) => { drawPoints( variableAmplitudeHarmonicSignalVector(amplitude)(f2, N, initialPhase), colors[i] ) });
+    // d
+    drawPoints(polyharmonicSignalVector(k, 256)([A3, A3, A3, A3, A3], f_s_2, initialPhases));
 }
 
-function 
+function polyharmonicSignalVector(harmonicsNumber, period) {
+    return (amplitudes, oscillations, initPhases) => {
+        let result = [];
+        for(var n = 0; n < period*2; n++) {
+            let y = 0;
+            for (var k = 0; k < harmonicsNumber; k++) {
+                y += harmonicSignal(initPhases[k], amplitudes[k], period, oscillations[k], n);
+            }
+            result.push({y: y, x: n})
+        }
+        return result;
+    };
+}
 
-function variablePhaseHarmonicSignal(initPhase) {
+function harmonicSignal(initPhase, amplitude, period, oscillation, n) {
+    return amplitude * Math.sin((2 * Math.PI * oscillation * n) / period + initPhase);
+}
+
+function variablePhaseHarmonicSignalVector(initPhase) {
     return (amplitude, period, oscillation) => {
         var result = [];
         for(var n = 0; n < period; n++) {
@@ -53,7 +74,7 @@ function variablePhaseHarmonicSignal(initPhase) {
     }
 }
 
-function variableOscillationHarmonicSignal(oscillation) {
+function variableOscillationHarmonicSignalVector(oscillation) {
     return (amplitude, period, initPhase) => {
         var result = [];
         for(var n = 0; n < period; n++) {
@@ -64,7 +85,7 @@ function variableOscillationHarmonicSignal(oscillation) {
     }
 }
 
-function variableAmplitudeHarmonicSignal(amplitude) {
+function variableAmplitudeHarmonicSignalVector(amplitude) {
     return (oscillation, period, initPhase) => {
         var result = [];
         for(var n = 0; n < period; n++) {
@@ -86,7 +107,6 @@ function drawAxes(xLength, yLength, startPoint, scale) {
     var yScale = d3.scaleLinear().domain([-1 * yAxisLength / scale / 2, yAxisLength / scale / 2]).range([yLength, 0]);
     var xAxis = d3.axisBottom().scale(xScale);
     var yAxis = d3.axisLeft().scale(yScale);
-    console.log(Math.round(svgMargin.top * 1.75));
     var yAxisGroup = svgContainer
         .append("g")
         .attr('class', 'axis')
